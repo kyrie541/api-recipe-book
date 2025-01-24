@@ -7,7 +7,6 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { RecipeModule } from './recipe/recipe.module';
-import { User } from './user/user.entity';
 
 @Module({
   imports: [
@@ -19,7 +18,7 @@ import { User } from './user/user.entity';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [User],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: process.env.DATABASE_SYNCHRONIZE === "true" ? true : false, 
     }),
     UserModule,

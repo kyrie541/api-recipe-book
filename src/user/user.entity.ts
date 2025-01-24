@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Recipe } from '../recipe/recipe.entity';
 
 @Entity('users')
 export class User {
@@ -10,4 +11,13 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Recipe, (recipe) => recipe.user)
+  recipes: Recipe[]; 
+
+  @CreateDateColumn()
+  createdAt?: Date;
+
+  @UpdateDateColumn()
+  updatedAt?: Date;
 }
