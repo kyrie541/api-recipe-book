@@ -1,10 +1,15 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsString, IsStrongPassword } from 'class-validator';
 
 export class RegisterDto {
   @IsEmail({}, { message: 'Invalid email format' })
   email: string;
 
+  // At least 8 characters long.
+  // At least 1 lowercase letter.
+  // At least 1 uppercase letter.
+  // At least 1 number.
+  // At least 1 symbol (special character).
   @IsString()
-  @MinLength(6, { message: 'Password must be at least 6 characters long' })
+  @IsStrongPassword()
   password: string;
 }
