@@ -43,14 +43,15 @@ export class S3Service {
     await this.s3.deleteObject(params).promise();
   }
 
-  getKeyFromUrl(url: string): string {
+  getKeyFromUrl(url: string): string | Boolean {
     const regex = new RegExp(
       `https://${this.bucketName}.s3.amazonaws.com/(.*)`,
     );
     const match = url.match(regex);
     if (match && match[1]) {
       return match[1];
+    } else {
+      return false;
     }
-    throw new BadRequestException('Invalid S3 URL');
   }
 }

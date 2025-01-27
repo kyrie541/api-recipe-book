@@ -51,6 +51,12 @@ export class RecipeService {
       imageUrl = await this.s3Service.uploadFile(file);
     }
 
+    // for copy public recipe image logic
+    const urlPattern = /^(https?:\/\/[^\s]+)$/i;
+    if (typeof data.image == 'string' && urlPattern.test(data.image)) {
+      imageUrl = data.image;
+    }
+
     const recipe = this.recipeRepository.create({
       ...data,
       image: imageUrl ?? undefined,
@@ -58,8 +64,6 @@ export class RecipeService {
     });
 
     return this.recipeRepository.save(recipe);
-    // const recipe = this.recipeRepository.create({ ...data, user });
-    // return this.recipeRepository.save(recipe);
   }
 
   async update(
@@ -75,9 +79,12 @@ export class RecipeService {
     }
 
     // Delete old image if new image is provided
+
     if (file && recipe.image) {
       const oldImageKey = this.s3Service.getKeyFromUrl(recipe.image);
-      await this.s3Service.deleteFile(oldImageKey);
+      if (typeof oldImageKey == 'string') {
+        await this.s3Service.deleteFile(oldImageKey);
+      }
     }
 
     // Upload new image if provided
@@ -97,9 +104,12 @@ export class RecipeService {
     }
 
     // Delete the image if it exists
+
     if (recipe.image) {
       const imageKey = this.s3Service.getKeyFromUrl(recipe.image);
-      await this.s3Service.deleteFile(imageKey);
+      if (typeof imageKey == 'string') {
+        await this.s3Service.deleteFile(imageKey);
+      }
     }
 
     await this.recipeRepository.remove(recipe);
